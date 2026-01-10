@@ -13,16 +13,20 @@ import axios from "axios";
 // ------------------------------------------------------------------
 
 // Gemini Setup
+// Note: Using Replit AI Integrations for Gemini access.
 const genAI = new GoogleGenAI({
   apiKey: process.env.AI_INTEGRATIONS_GEMINI_API_KEY || "dummy",
   httpOptions: {
     baseUrl: process.env.AI_INTEGRATIONS_GEMINI_BASE_URL,
+    apiVersion: "v1beta"
   }
 });
 
 // Pexels Setup
-// Pexels client requires API Key. If not present, we can't search.
 const PEXELS_API_KEY = process.env.PEXELS_API_KEY;
+if (!PEXELS_API_KEY) {
+  console.warn("WARNING: PEXELS_API_KEY is missing from Secrets.");
+}
 let pexelsClient: any;
 if (PEXELS_API_KEY) {
   pexelsClient = createClient(PEXELS_API_KEY);
@@ -30,7 +34,10 @@ if (PEXELS_API_KEY) {
 
 // Shotstack Setup
 const SHOTSTACK_KEY = process.env.SHOTSTACK_KEY;
-const SHOTSTACK_API_URL = "https://api.shotstack.io/edit/stage/render"; // Using Stage (sandbox) environment
+if (!SHOTSTACK_KEY) {
+  console.warn("WARNING: SHOTSTACK_KEY is missing from Secrets.");
+}
+const SHOTSTACK_API_URL = "https://api.shotstack.io/edit/stage/render"; 
 
 async function runVideoPipeline(jobId: number, script: string) {
   try {
@@ -66,7 +73,7 @@ async function runVideoPipeline(jobId: number, script: string) {
     await storage.appendLog(jobId, "Gatherer Agent: Searching Pexels for footage...");
 
     if (!pexelsClient) {
-      throw new Error("Pexels API Key is missing.");
+      throw new Error("Pexels API Key is missing. Please add PEXELS_API_KEY to Replit Secrets.");
     }
 
     const videoClips = [];
@@ -74,18 +81,29 @@ async function runVideoPipeline(jobId: number, script: string) {
     for (const scene of plan) {
       await storage.appendLog(jobId, `Gatherer Agent: Searching for "${scene.keyword}"...`);
       try {
-        const searchResult = await pexelsClient.videos.search({
+        let searchResult = await pexelsClient.videos.search({
           query: scene.keyword,
           per_page: 5,
           orientation: "portrait",
           size: "large"
         });
 
+        // Fallback logic if no videos found
+        if (!searchResult.videos || searchResult.videos.length === 0) {
+          await storage.appendLog(jobId, `Gatherer Agent: No results for "${scene.keyword}". Trying fallback...`);
+          searchResult = await pexelsClient.videos.search({
+            query: "cinematic aesthetic portrait",
+            per_page: 5,
+            orientation: "portrait",
+            size: "large"
+          });
+        }
+
         if (searchResult.videos && searchResult.videos.length > 0) {
           // Find highest resolution mp4
-          const bestVideo = searchResult.videos[0]; // Simplification: take first relevant result
+          const bestVideo = searchResult.videos[0]; 
           const videoFile = bestVideo.video_files
-            .sort((a: any, b: any) => (b.width * b.height) - (a.width * a.height))[0]; // Max resolution
+            .sort((a: any, b: any) => (b.width * b.height) - (a.width * a.height))[0]; 
 
           if (videoFile) {
             videoClips.push({
@@ -98,7 +116,7 @@ async function runVideoPipeline(jobId: number, script: string) {
              await storage.appendLog(jobId, `Gatherer Agent: No suitable video file found for "${scene.keyword}"`);
           }
         } else {
-          await storage.appendLog(jobId, `Gatherer Agent: No results for "${scene.keyword}"`);
+          await storage.appendLog(jobId, `Gatherer Agent: No results for "${scene.keyword}" and fallback failed.`);
         }
       } catch (err: any) {
         await storage.appendLog(jobId, `Gatherer Agent: Error searching "${scene.keyword}": ${err.message}`);
