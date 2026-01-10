@@ -40,3 +40,10 @@ waitForPort = 5000
 
 [agent]
 integrations = ["javascript_gemini_ai_integrations:2.0.0"]
+
+[userenv]
+
+[userenv.shared]
+SHOTSTACK_KEY = "1kzACLcr8tCVG6PD3fC1zcZq2NAApyLiyJvP22q4"
+PEXELS_API_KEY = "PI3gILT3bUaH16ijuysfKXKvpluGrh24swWJVipekmcESMCBYc2ClHvB"
+GEMINI_API_KEY = "AIzaSyAv84EBm9Ts4TAaM2qG12Iu-PUsx6SQYQg"

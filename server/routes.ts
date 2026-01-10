@@ -50,7 +50,7 @@ async function runVideoPipeline(jobId: number, script: string) {
       Script: "${script}"
     `;
 
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const result = await model.generateContent(prompt);
     const responseText = result.response.text();
     
@@ -116,7 +116,7 @@ async function runVideoPipeline(jobId: number, script: string) {
     await storage.appendLog(jobId, "Editor Agent: Submitting render job to Shotstack...");
 
     if (!SHOTSTACK_KEY) {
-      throw new Error("Shotstack API Key is missing.");
+      throw new Error("Shotstack API Key is missing. Please add SHOTSTACK_KEY to Secrets.");
     }
 
     // Construct Shotstack JSON
