@@ -50,7 +50,7 @@ async function runVideoPipeline(jobId: number, script: string) {
       Script: "${script}"
     `;
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = (genAI as any).getGenerativeModel({ model: "gemini-1.5-flash" });
     const result = await model.generateContent(prompt);
     const responseText = result.response.text();
     
@@ -216,7 +216,7 @@ async function runVideoPipeline(jobId: number, script: string) {
       response.data.pipe(writer);
 
       await new Promise((resolve, reject) => {
-        writer.on('finish', resolve);
+        writer.on('finish', () => resolve(undefined));
         writer.on('error', reject);
       });
 
