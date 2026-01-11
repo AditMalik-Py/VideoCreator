@@ -1,46 +1,35 @@
 
-import { db } from "./db";
-import { jobs, type Job, type InsertJob } from "@shared/schema";
-import { eq, desc } from "drizzle-orm";
+import * as localStorage from "./local-storage";
+import { Job, InsertJob } from "@shared/types";
 
 export interface IStorage {
   getJob(id: number): Promise<Job | undefined>;
   createJob(job: InsertJob): Promise<Job>;
-  updateJob(id: number, updates: Partial<Job>): Promise<Job>;
+  updateJob(id: number, updates: Partial<Job>): Promise<Job | undefined>;
   listJobs(): Promise<Job[]>;
-  appendLog(id: number, message: string): Promise<Job>;
+  appendLog(id: number, message: string): Promise<void>;
 }
 
-export class DatabaseStorage implements IStorage {
+export class LocalStorage implements IStorage {
   async getJob(id: number): Promise<Job | undefined> {
-    const [job] = await db.select().from(jobs).where(eq(jobs.id, id));
-    return job;
+    return Promise.resolve(localStorage.getJob(id));
   }
 
   async createJob(insertJob: InsertJob): Promise<Job> {
-    const [job] = await db.insert(jobs).values(insertJob).returning();
-    return job;
+    return Promise.resolve(localStorage.createJob(insertJob));
   }
 
-  async updateJob(id: number, updates: Partial<Job>): Promise<Job> {
-    const [updated] = await db
-      .update(jobs)
-      .set(updates)
-      .where(eq(jobs.id, id))
-      .returning();
-    return updated;
+  async updateJob(id: number, updates: Partial<Job>): Promise<Job | undefined> {
+    return Promise.resolve(localStorage.updateJob(id, updates));
   }
 
   async listJobs(): Promise<Job[]> {
-    return await db.select().from(jobs).orderBy(desc(jobs.createdAt));
+    return Promise.resolve(localStorage.listJobs());
   }
 
-  async appendLog(id: number, message: string): Promise<Job> {
-    const job = await this.getJob(id);
-    if (!job) throw new Error("Job not found");
-    const logs = [...(job.logs || []), message];
-    return this.updateJob(id, { logs });
+  async appendLog(id: number, message: string): Promise<void> {
+    return Promise.resolve(localStorage.appendLog(id, message));
   }
 }
 
-export const storage = new DatabaseStorage();
+export const storage = new LocalStorage();

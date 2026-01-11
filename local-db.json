@@ -1,0 +1,142 @@
+{
+  "jobs": [
+    {
+      "script": "A test script",
+      "id": 1,
+      "createdAt": "2026-01-10T10:12:53.990Z",
+      "status": "done",
+      "logs": [
+        "Director Agent: Analyzing script...",
+        "Director Agent: Plan created with 8 scenes.",
+        "Gatherer Agent: Searching Pexels for footage...",
+        "Gatherer Agent: Searching for \"computer screen with test interface\"...",
+        "Gatherer Agent: Found clip for \"computer screen with test interface\"",
+        "Gatherer Agent: Searching for \"hand typing on keyboard during test execution\"...",
+        "Gatherer Agent: Found clip for \"hand typing on keyboard during test execution\"",
+        "Gatherer Agent: Searching for \"empty lab environment with test equipment\"...",
+        "Gatherer Agent: Found clip for \"empty lab environment with test equipment\"",
+        "Gatherer Agent: Searching for \"close-up of test data charts on monitor\"...",
+        "Gatherer Agent: Found clip for \"close-up of test data charts on monitor\"",
+        "Gatherer Agent: Searching for \"person analyzing test results on laptop\"...",
+        "Gatherer Agent: Found clip for \"person analyzing test results on laptop\"",
+        "Gatherer Agent: Searching for \"test software loading screen\"...",
+        "Gatherer Agent: Found clip for \"test software loading screen\"",
+        "Gatherer Agent: Searching for \"test report document on desk\"...",
+        "Gatherer Agent: Found clip for \"test report document on desk\"",
+        "Gatherer Agent: Searching for \"test environment setup process\"...",
+        "Gatherer Agent: Found clip for \"test environment setup process\"",
+        "Editor Agent: Submitting render job to Shotstack...",
+        "Editor Agent: Render ID e307e769-64d0-46ea-9ec4-89389ba898a3. Polling status...",
+        "Editor Agent: Render status: fetching",
+        "Editor Agent: Render status: fetching",
+        "Editor Agent: Render status: preprocessing",
+        "Editor Agent: Render status: fetching",
+        "Editor Agent: Render status: rendering",
+        "Editor Agent: Render status: rendering",
+        "Editor Agent: Render status: rendering",
+        "Editor Agent: Render status: rendering",
+        "Editor Agent: Render status: rendering",
+        "Editor Agent: Render status: rendering",
+        "Editor Agent: Render status: rendering",
+        "Editor Agent: Render status: rendering",
+        "Editor Agent: Render status: rendering",
+        "Editor Agent: Render status: rendering",
+        "Editor Agent: Render status: rendering",
+        "Editor Agent: Render status: rendering",
+        "Editor Agent: Render status: rendering",
+        "Editor Agent: Render status: rendering",
+        "Editor Agent: Render status: rendering",
+        "Editor Agent: Render status: rendering",
+        "Editor Agent: Render status: rendering",
+        "Editor Agent: Render status: rendering",
+        "Editor Agent: Render status: rendering",
+        "Editor Agent: Render status: rendering",
+        "Editor Agent: Render status: rendering",
+        "Editor Agent: Render status: rendering",
+        "Editor Agent: Render status: rendering",
+        "Editor Agent: Render status: rendering",
+        "Editor Agent: Render status: rendering",
+        "Editor Agent: Render status: done",
+        "Pipeline: Downloading final video...",
+        "Pipeline: Success! Video ready."
+      ],
+      "visualPlan": [
+        {
+          "keyword": "computer screen with test interface",
+          "duration": 4
+        },
+        {
+          "keyword": "hand typing on keyboard during test execution",
+          "duration": 4
+        },
+        {
+          "keyword": "empty lab environment with test equipment",
+          "duration": 5
+        },
+        {
+          "keyword": "close-up of test data charts on monitor",
+          "duration": 4
+        },
+        {
+          "keyword": "person analyzing test results on laptop",
+          "duration": 5
+        },
+        {
+          "keyword": "test software loading screen",
+          "duration": 4
+        },
+        {
+          "keyword": "test report document on desk",
+          "duration": 4
+        },
+        {
+          "keyword": "test environment setup process",
+          "duration": 5
+        }
+      ],
+      "pexelsVideos": [
+        {
+          "url": "https://videos.pexels.com/video-files/35544498/15058203_2160_3840_25fps.mp4",
+          "duration": 4,
+          "keyword": "computer screen with test interface"
+        },
+        {
+          "url": "https://videos.pexels.com/video-files/5473802/5473802-uhd_2160_4096_25fps.mp4",
+          "duration": 4,
+          "keyword": "hand typing on keyboard during test execution"
+        },
+        {
+          "url": "https://videos.pexels.com/video-files/9573905/9573905-uhd_2160_4096_25fps.mp4",
+          "duration": 5,
+          "keyword": "empty lab environment with test equipment"
+        },
+        {
+          "url": "https://videos.pexels.com/video-files/7579561/7579561-uhd_2160_4096_25fps.mp4",
+          "duration": 4,
+          "keyword": "close-up of test data charts on monitor"
+        },
+        {
+          "url": "https://videos.pexels.com/video-files/6799753/6799753-uhd_2160_3840_30fps.mp4",
+          "duration": 5,
+          "keyword": "person analyzing test results on laptop"
+        },
+        {
+          "url": "https://videos.pexels.com/video-files/8879947/8879947-uhd_2160_4096_25fps.mp4",
+          "duration": 4,
+          "keyword": "test software loading screen"
+        },
+        {
+          "url": "https://videos.pexels.com/video-files/7953576/7953576-uhd_2160_3840_30fps.mp4",
+          "duration": 4,
+          "keyword": "test report document on desk"
+        },
+        {
+          "url": "https://videos.pexels.com/video-files/5095068/5095068-uhd_2160_3840_25fps.mp4",
+          "duration": 5,
+          "keyword": "test environment setup process"
+        }
+      ],
+      "videoUrl": "/videos/video-1.mp4"
+    }
+  ]
+}
