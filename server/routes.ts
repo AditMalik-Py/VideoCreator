@@ -4,27 +4,28 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { api } from "@shared/routes";
 import { z } from "zod";
+import { GoogleGenAI } from "@google/genai";
 import { createClient } from "pexels";
 import axios from "axios";
-
-console.log("Required Secret Keys: ZAI_API_KEY, PEXELS_API_KEY, SHOTSTACK_KEY_PRODUCTION");
 
 // ------------------------------------------------------------------
 // Helper: Video Automation Pipeline
 // ------------------------------------------------------------------
 
-// Zai Setup
-const ZAI_API_KEY = process.env.ZAI_API_KEY;
-if (!ZAI_API_KEY) {
-  console.error("ERROR: ZAI_API_KEY is missing from Secrets.");
-  process.exit(1);
-}
+// Gemini Setup
+// Note: Using Replit AI Integrations for Gemini access.
+const genAI = new GoogleGenAI({
+  apiKey: process.env.AI_INTEGRATIONS_GEMINI_API_KEY || "dummy",
+  httpOptions: {
+    baseUrl: process.env.AI_INTEGRATIONS_GEMINI_BASE_URL,
+    apiVersion: "v1beta"
+  }
+});
 
 // Pexels Setup
 const PEXELS_API_KEY = process.env.PEXELS_API_KEY;
 if (!PEXELS_API_KEY) {
-  console.error("ERROR: PEXELS_API_KEY is missing from Secrets. Please add it to the Replit sidebar.");
-  process.exit(1);
+  console.warn("WARNING: PEXELS_API_KEY is missing from Secrets.");
 }
 let pexelsClient: any;
 if (PEXELS_API_KEY) {
@@ -32,10 +33,9 @@ if (PEXELS_API_KEY) {
 }
 
 // Shotstack Setup
-const SHOTSTACK_KEY = process.env.SHOTSTACK_KEY_PRODUCTION;
+const SHOTSTACK_KEY = process.env.SHOTSTACK_KEY;
 if (!SHOTSTACK_KEY) {
-  console.error("ERROR: SHOTSTACK_KEY_PRODUCTION is missing from Secrets. Please add it to the Replit sidebar.");
-  process.exit(1);
+  console.warn("WARNING: SHOTSTACK_KEY is missing from Secrets.");
 }
 const SHOTSTACK_API_URL = "https://api.shotstack.io/edit/stage/render"; 
 
@@ -57,25 +57,9 @@ async function runVideoPipeline(jobId: number, script: string) {
       Script: "${script}"
     `;
 
-    const response = await axios.post(
-      "https://api.z.ai/api/paas/v4/chat/completions",
-      {
-        model: "glm-4.6v-flash",
-        messages: [
-          {
-            role: "user",
-            content: prompt,
-          },
-        ],
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${ZAI_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    const responseText = response.data.choices[0].message.content;
+    const model = (genAI as any).getGenerativeModel({ model: "gemini-1.5-flash" });
+    const result = await model.generateContent(prompt);
+    const responseText = result.response.text();
     
     // Clean markdown if present
     const cleanedJson = responseText.replace(/```json/g, "").replace(/```/g, "").trim();
@@ -105,7 +89,7 @@ async function runVideoPipeline(jobId: number, script: string) {
         });
 
         // Fallback logic if no videos found
-        if (!searchResult || !searchResult.videos || searchResult.videos.length === 0) {
+        if (!searchResult.videos || searchResult.videos.length === 0) {
           await storage.appendLog(jobId, `Gatherer Agent: No results for "${scene.keyword}". Trying fallback...`);
           searchResult = await pexelsClient.videos.search({
             query: "cinematic aesthetic portrait",

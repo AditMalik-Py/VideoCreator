@@ -1,23 +1,6 @@
 
 import { z } from "zod";
-import { Job, InsertJob } from "./types";
-
-import { z } from "zod";
-
-const jobSchema = z.object({
-  id: z.number(),
-  script: z.string(),
-  status: z.enum(["pending", "planning", "gathering", "rendering", "done", "failed"]),
-  createdAt: z.date(),
-  logs: z.array(z.string()),
-  visualPlan: z.any(),
-  pexelsVideos: z.any(),
-  videoUrl: z.string().nullable(),
-});
-
-const insertJobSchema = z.object({
-  script: z.string(),
-});
+import { insertJobSchema, jobs } from "./schema";
 
 export const api = {
   jobs: {
@@ -26,7 +9,7 @@ export const api = {
       path: "/api/jobs",
       input: insertJobSchema,
       responses: {
-        201: jobSchema,
+        201: z.custom<typeof jobs.$inferSelect>(),
         400: z.object({ message: z.string() }),
       },
     },
@@ -34,7 +17,7 @@ export const api = {
       method: "GET" as const,
       path: "/api/jobs/:id",
       responses: {
-        200: jobSchema,
+        200: z.custom<typeof jobs.$inferSelect>(),
         404: z.object({ message: z.string() }),
       },
     },
@@ -42,7 +25,7 @@ export const api = {
       method: "GET" as const,
       path: "/api/jobs",
       responses: {
-        200: z.array(jobSchema),
+        200: z.array(z.custom<typeof jobs.$inferSelect>()),
       },
     },
   },
